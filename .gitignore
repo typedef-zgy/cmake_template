@@ -1,0 +1,4 @@
+build/*
+src/thread_lib/build/*
+bin/test_hello
+*.a
