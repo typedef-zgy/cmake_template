@@ -14,6 +14,8 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <signal.h>
+#include <string.h>
+#include <stdio.h>
 
 #define SYS_ERR_THROW(_CALLSTR, _RET) \
        std::stringstream ss;\
@@ -60,7 +62,7 @@
 namespace zlib {
 namespace zthread {
 
-class ZMutex::Impl : public ZMutex {
+class ZMutex::Impl {
 public:
      Impl() {
          defautl_init(&_handle);
@@ -84,8 +86,11 @@ public:
      bool timed_lock(int64_t ms) const {
          struct timespec ts;
          utils::Utils::ms2TimeSpec(ts, ms);
-         //THROW_TIMEDFAIL(pthread_mutex_timedlock(&_handle, &ts));
+#if defined(_POSIX_TIMEOUTS) && _POSIX_TIMEOUTS >= 200112L
+         THROW_TIMEDFAIL(pthread_mutex_timedlock(&_handle, &ts));
+#else
          return false;
+#endif
      }
 
      void unlock() const {
@@ -104,7 +109,7 @@ private:
     mutable pthread_mutex_t _handle;
 };
 
-ZMutex::ZMutex() {
+ZMutex::ZMutex() : _impl(NULL) {
     _impl = new Impl();
 }
 

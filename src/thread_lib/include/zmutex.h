@@ -29,12 +29,12 @@ public:
     void* native_handle() const;
 private:
     class Impl;
-    Impl *_impl;
+    mutable Impl *_impl;
 };
 
 class ZLockGuard : public utils::Noncopyable {
 public:
-    ZLockGuard(const ZMutex& mutex_, int64_t timeout_)
+    ZLockGuard(const ZMutex& mutex_, int64_t timeout_ = 0)
         : _mutex(&mutex_) {
             if(0 == timeout_) {
                 mutex_.lock();
