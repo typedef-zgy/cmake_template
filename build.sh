@@ -33,7 +33,11 @@ if [ ${build_flag} -eq 0 ]; then
     exit 0
 fi
 
-mkdir -p ./build
+if [ ! -d "build" ]; then
+    echo "Make Folder!"
+    mkdir -p ./build
+fi
+
 cd build
 
 CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}"
