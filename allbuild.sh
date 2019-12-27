@@ -2,7 +2,7 @@
 zthread_path="src/thread_lib"
 
 flag=""
-if [ $# -g 1 ]; then
+if [ $# -gt 1 ]; then
     echo "args too much"
     exit 0
 fi
